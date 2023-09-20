@@ -1,4 +1,5 @@
 const { defineConfig } = require('eslint-define-config')
+// vue
 module.exports = defineConfig({
     root: true,
     globals: {},
