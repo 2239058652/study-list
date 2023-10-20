@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 以vue为例，渲染出后端给的图片可以这样，这是个验证码 -->
+    <!-- // let result = await getLoginImg()
+    // const myBlob = new window.Blob([result.data], { type: 'image/jpeg' })
+  
+    // const captcha = window.URL.createObjectURL(myBlob) //获取图片地址
+    // src.value = captcha
+  
+    // img地址直接用借口拼接上时间戳就可以展示出来
+    // src.value = '/pmspbe/getVerify?t=' + new Date().getTime()
+    src.value = `/pmspbe/getVerify?time=${Date.now()}` -->
+</body>
+
+</html>
