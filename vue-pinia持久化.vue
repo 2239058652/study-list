@@ -26,6 +26,8 @@ app.use(pinia)
 app.use(router)
 
 app.mount('#app')
+
+// pinia-plugin-persist 是另一个持久化插件
 </script>
 
 <style scoped>
