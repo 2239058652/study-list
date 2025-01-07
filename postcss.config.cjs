@@ -1,7 +1,7 @@
 
 module.exports = {
     plugins: {
-        'postcss-px-to-viewport': {
+        'postcss-px-to-viewport-8-plugin': {
             unitToConvert: 'px',  // 需要转换的单位，默认为"px"
             viewportWidth: 1920, //  设计稿的视口宽度
             unitPrecision: 5, // 单位转换后保留的精度
@@ -21,4 +21,4 @@ module.exports = {
 }
 
 // 窗口尺寸变化时，页面布局如何自适应
-// npm install postcss-px-to-viewport --save-dev
+// npm install postcss-px-to-viewport-8-plugin --save-dev
