@@ -55,3 +55,80 @@ onUnmounted(() => {
     EventTarget.prototype.addEventListener = originalAddEventListener;
   }
 });
+
+
+【上面的方法好像有点问题，改为下面的代码：】
+
+// 修改你的 onMounted 钩子
+onMounted(() => {
+  // 保存原生的 addEventListener
+  const originalAddEventListener = EventTarget.prototype.addEventListener
+  
+  // 覆盖原生方法
+  EventTarget.prototype.addEventListener = function (
+    type: string,
+    listener: EventListenerOrEventListenerObject,
+    options?: boolean | AddEventListenerOptions
+  ) {
+    // 为滚轮相关事件强制添加 passive
+    const passiveEvents = ['wheel', 'mousewheel', 'touchstart', 'touchmove']
+    if (passiveEvents.includes(type)) {
+      const opts = typeof options === 'object' ? 
+        { ...options, passive: true } : 
+        { passive: true }
+      return originalAddEventListener.call(this, type, listener, opts)
+    }
+    return originalAddEventListener.call(this, type, listener, options)
+  }
+
+  initCharts()
+
+  // 恢复原生方法
+  EventTarget.prototype.addEventListener = originalAddEventListener
+})
+
+// 修改 resize 监听器
+const handleResize = debounce(() => {
+  myChart?.resize({ silent: true })  // 添加 silent 参数
+  myPieChart?.resize({ silent: true })
+}, 100)
+
+// 初始化图表时添加 passive 配置
+const initCharts = () => {
+  try {
+    chartDom = document.getElementById('main')
+    chartPieDom = document.getElementById('pie')
+
+    if (chartDom) {
+      myChart = echarts.init(chartDom, null, {
+        renderer: 'canvas',
+        useCoarsePointer: true,    // 优化指针检测
+        pointerSize: 8,            // 增大热区
+        useDirtyRect: true         // 启用脏矩形优化
+      })
+      option && myChart.setOption(option)
+    }
+
+    if (chartPieDom) {
+      myPieChart = echarts.init(chartPieDom, null, {
+        renderer: 'canvas',
+        useCoarsePointer: true,
+        pointerSize: 8,
+        useDirtyRect: true
+      })
+      pieOption && myPieChart.setOption(pieOption)
+    }
+
+    // 修改 resize 监听方式
+    const resizeObserver = new ResizeObserver(handleResize)
+    if (chartDom) resizeObserver.observe(chartDom)
+    if (chartPieDom) resizeObserver.observe(chartPieDom)
+  } catch (error) {
+    console.error('Error initializing charts:', error)
+  }
+}
+
+// 移除之前的 resize 监听
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
